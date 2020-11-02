@@ -14,12 +14,13 @@ namespace WebParse
             MyDI mydi = new MyDI(new MyParser());
             //mydi.ExtractGoldPrice("https://www.kitco.com");
             //mydi.ParseWeb();
-            mydi.ExtractLink("https://vnexpress.net");
-            mydi.ExtractLink("https://cafef.vn");
+            //mydi.ExtractLink("https://vnexpress.net");
+            //mydi.ExtractLink("https://cafef.vn");
 
             //Console.WriteLine("-----------------------------------------------------");
             //Console.WriteLine("-----------------------------------------------------");
-            //mydi.ExtractHref("https://www.kitco.com");
+            mydi.ExtractLink("https://www.kitco.com");
+            //mydi.ExtractGoldKitco("https://www.kitco.com");
         }
     }
 }

@@ -12,5 +12,7 @@ namespace WebParse
         void ExtractLink(String url);
 
         void ExtractHref(String url);
+
+        void ExtractGoldKitco(String url);
     }
 }

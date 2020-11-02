@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using HtmlAgilityPack;
 
+
 namespace WebParse
 {
     public class MyParser : Parser
@@ -183,6 +184,24 @@ namespace WebParse
 
                 }
             }
+        }
+
+        public void ExtractGoldKitco(String url)
+        {
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc = web.Load(url);
+            // extracting all links
+            //SelectSingleNode("//*[@id='test']")
+            var bid = doc.DocumentNode.SelectSingleNode("//*[@id='" + "lgq-bid" + "']");
+            var ask = doc.DocumentNode.SelectSingleNode("//*[@id='" + "lgq-ask" + "']");
+            var chg = doc.DocumentNode.SelectSingleNode("//*[@id='" + "lgq-chg" + "']");
+            var pct = doc.DocumentNode.SelectSingleNode("//*[@id='" + "lgq-chg-percent" + "']");
+            //lgq - chg - percent
+            Console.WriteLine("Bid :"+bid.InnerText);
+            Console.WriteLine("Ask :" + ask.InnerText);
+            Console.WriteLine("Chg :" + chg.InnerText);
+            Console.WriteLine("Pct :" + pct.InnerText);
         }
     }
 }

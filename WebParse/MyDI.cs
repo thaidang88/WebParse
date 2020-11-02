@@ -31,5 +31,10 @@ namespace WebParse
             myparser.ExtractHref(URL);
         }
 
+        public void ExtractGoldKitco(String URL)
+        {
+            myparser.ExtractGoldKitco(URL);
+        }
+
     }
 }
