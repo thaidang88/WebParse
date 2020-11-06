@@ -203,5 +203,64 @@ namespace WebParse
             Console.WriteLine("Chg :" + chg.InnerText);
             Console.WriteLine("Pct :" + pct.InnerText);
         }
+        
+        public void ExtractIndexFromInvesting(String url)
+        {
+            var URL = "https://www.investing.com";
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc = web.Load(URL);
+
+            var list = new Dictionary<string, string>()
+            {
+                {"sb_last_8873", "US30 Futures"},
+                {"sb_last_8839", "US 500 Futures"},
+                {"sb_last_169","Dow Jones"},
+                {"sb_last_166", "S&P 500"},
+                {"sb_last_14958", "Nasdaq"},
+                {"sb_last_44336", "S&P 500 VIX"},
+                {"sb_last_8827", "Dollar Index"}
+            };
+
+            foreach(var x in list)
+            {
+                var name = doc.DocumentNode.SelectSingleNode("//*[@id='" + x.Key + "']");
+                Console.WriteLine(x.Value + ": " + name.InnerText);	
+            }
+        }
+        
+       public void ExtractHrefNew(string URL)
+        {
+            // declaring & loading dom
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc = web.Load(URL);
+
+            // extracting all links
+            List<String> htmls= new List<String>();
+            foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
+            {
+                HtmlAttribute att = link.Attributes["href"];
+                String html= link.Attributes["href"].Value;
+                String title=link.InnerText;
+
+                if ((html.Contains("a"))&&(!html.Contains("javascript")))
+                {
+                if(title.Length>20)
+                {
+                            if(!html.Contains("http"))
+                            {
+                                html = URL+html;
+                            }
+                    if(!htmls.Contains(html))
+                    {
+                            Console.WriteLine(title);
+                            Console.WriteLine(html);
+                            htmls.Add(html);
+                    }
+                }
+                }
+            }
+        
     }
 }
