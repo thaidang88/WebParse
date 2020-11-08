@@ -14,5 +14,9 @@ namespace WebParse
         void ExtractHref(String url);
 
         void ExtractGoldKitco(String url);
+
+        void ExtractDownJonesFromInvesting(String url);
+
+        void ExtractDataFromBds(String url);
     }
 }

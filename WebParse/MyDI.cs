@@ -36,5 +36,15 @@ namespace WebParse
             myparser.ExtractGoldKitco(URL);
         }
 
+        public void ExtractDownJonesFromInvesting(String URL)
+        {
+            myparser.ExtractDownJonesFromInvesting(URL);
+        }
+
+        public void ExtractDataFromBds(String url)
+        {
+            myparser.ExtractDataFromBds(url);
+        }
+
     }
 }

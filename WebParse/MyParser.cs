@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using HtmlAgilityPack;
 
+using System.Linq;
 
 namespace WebParse
 {
@@ -141,28 +142,28 @@ namespace WebParse
             {
                 //cbl_items.Items.Add(link);
                 //if (link.InnerHtml.Contains("news/2020-10-30/"))
-                    //if (link.Attributes["href"].Value.Contains("news/2020-10-30"))
-                    if ((link.Attributes["href"].Value.Contains("a"))&&(!link.Attributes["href"].Value.Contains("javascript")))
-                    {
+                //if (link.Attributes["href"].Value.Contains("news/2020-10-30"))
+                if ((link.Attributes["href"].Value.Contains("a")) && (!link.Attributes["href"].Value.Contains("javascript")))
+                {
                     //if (!ret.Contains(link))
                     {
                         ret.Add(link);
-                        String html= link.Attributes["href"].Value;
-                        String title=link.InnerText;
-                        if(!html.Contains("http"))
+                        String html = link.Attributes["href"].Value;
+                        String title = link.InnerText;
+                        if (!html.Contains("http"))
                         {
-                            html = URL+html;
+                            html = URL + html;
                         }
                         Console.WriteLine(title);
                         Console.WriteLine(html);
                         //ExtractLink(URL + link.Attributes["href"].Value);
                         File.AppendAllText("WriteFile.txt", title + "\n");
-                        File.AppendAllText("WriteFile.txt", html+"\n");
-                        
+                        File.AppendAllText("WriteFile.txt", html + "\n");
+
                     }
                 }
             }
-            
+
         }
 
         public void ExtractHref(string URL)
@@ -198,12 +199,31 @@ namespace WebParse
             var chg = doc.DocumentNode.SelectSingleNode("//*[@id='" + "lgq-chg" + "']");
             var pct = doc.DocumentNode.SelectSingleNode("//*[@id='" + "lgq-chg-percent" + "']");
             //lgq - chg - percent
-            Console.WriteLine("Bid :"+bid.InnerText);
+            Console.WriteLine("Bid :" + bid.InnerText);
             Console.WriteLine("Ask :" + ask.InnerText);
             Console.WriteLine("Chg :" + chg.InnerText);
             Console.WriteLine("Pct :" + pct.InnerText);
         }
-        
+
+        public void ExtractDownJonesFromInvesting(String url)
+        {
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc = web.Load(url);
+            // extracting all links
+            //SelectSingleNode("//*[@id='test']")
+            var index = doc.DocumentNode.SelectSingleNode("//*[@id='sb_last_169']");
+            var chg = doc.DocumentNode.SelectSingleNode("//*[@id='sb_change_169']");
+            var pct = doc.DocumentNode.SelectSingleNode("//*[@id='sb_changepc_169']");
+            //var pct = doc.DocumentNode.SelectSingleNode("//*[@id='" + "lgq-chg-percent" + "']");
+            //lgq - chg - percent
+            Console.WriteLine("index :" + index.InnerText);
+            //Console.WriteLine("Ask :" + ask.InnerText);
+            Console.WriteLine("Chg :" + chg.InnerText);
+            Console.WriteLine("Pct :" + pct.InnerText);
+        }
+
+
         public void ExtractIndexFromInvesting(String url)
         {
             var URL = "https://www.investing.com";
@@ -222,45 +242,154 @@ namespace WebParse
                 {"sb_last_8827", "Dollar Index"}
             };
 
-            foreach(var x in list)
+            foreach (var x in list)
             {
                 var name = doc.DocumentNode.SelectSingleNode("//*[@id='" + x.Key + "']");
-                Console.WriteLine(x.Value + ": " + name.InnerText);	
+                Console.WriteLine(x.Value + ": " + name.InnerText);
             }
         }
-        
-       public void ExtractHrefNew(string URL)
+
+        public void ExtractHrefNew(string URL)
         {
             // declaring & loading dom
             HtmlWeb web = new HtmlWeb();
             HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
             doc = web.Load(URL);
-
+            File.Delete("WriteFile.txt");
             // extracting all links
-            List<String> htmls= new List<String>();
+            List<String> htmls = new List<String>();
             foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
             {
                 HtmlAttribute att = link.Attributes["href"];
-                String html= link.Attributes["href"].Value;
-                String title=link.InnerText;
+                String html = link.Attributes["href"].Value;
+                String title = link.InnerText;
 
-                if ((html.Contains("a"))&&(!html.Contains("javascript")))
+                if ((html.Contains("a")) && (!html.Contains("javascript"))&&(IsValidLink(html)))
                 {
-                if(title.Length>20)
-                {
-                            if(!html.Contains("http"))
-                            {
-                                html = URL+html;
-                            }
-                    if(!htmls.Contains(html))
+                    if (title.Length > 20)
                     {
+                        if (!html.Contains("http"))
+                        {
+                            html = URL + html;
+                        }
+                        if (!htmls.Contains(html))
+                        {
                             Console.WriteLine(title);
                             Console.WriteLine(html);
                             htmls.Add(html);
+                            File.AppendAllText("WriteFile.txt", title + "\n");
+                            File.AppendAllText("WriteFile.txt", html + "\n");
+                        }
                     }
                 }
+            }
+        }
+
+        public bool IsValidBDSLink(String url)
+        {
+            String[]temp = url.Split("/");
+            if(temp.Length==3)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsValidLink(String url)
+        {
+            if(url.Contains(".html")||url.Contains(".chn"))
+            {
+                return true;
+            }
+            return false;
+        }
+        public void ExtractHrefFromBDS(string URL,String str)
+        {
+            // declaring & loading dom
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc = web.Load(URL);
+            File.Delete("WriteFile.txt");
+            // extracting all links
+            List<String> htmls = new List<String>();
+            foreach (HtmlNode link in doc.DocumentNode.SelectNodes("//a[@href]"))
+            {
+                HtmlAttribute att = link.Attributes["href"];
+                String html = link.Attributes["href"].Value;
+                String title = link.InnerText;
+
+                if ((html.Contains("a")) && !html.Contains("javascript") )
+                {
+                    //if(html.Contains(str))
+                    { 
+                    //if (title.Length > 20&&!title.Contains("\n"))
+                    if (title.Length > 20 )
+                     {
+                            
+                            if (html.Contains(str)&&IsValidBDSLink(html))
+                            {
+                                if (!htmls.Contains(html))
+                                {
+                                    if (title.Contains("/"))
+                                    {
+                                        Console.WriteLine(title);
+                                        Console.WriteLine(html);
+                                        if (!html.Contains("http"))
+                                        {
+                                            html = URL + html;
+                                        }
+                                        ExtractDataFromBds(html);
+                                        htmls.Add(html);
+                                        File.AppendAllText("WriteFile.txt", title + "\n");
+                                        File.AppendAllText("WriteFile.txt", html + "\n");
+                                    }
+                                }
+                            }
+                    }
+                    }
                 }
             }
+
+        }
+
+        public void ExtractDataFromBds(String url)
+        {
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc = web.Load(url);
+            
+            // filter html elements on the basis of class name
+            IEnumerable<HtmlNode> nodes = doc.DocumentNode.Descendants("span").Where(n => n.HasClass("sp2"));
+            foreach (var item in nodes)
+            {
+                // displaying final output
+                Console.WriteLine(item.InnerHtml);
+               
+            }
+
+            nodes= doc.DocumentNode.Descendants("h1").Where(n => n.HasClass("tile-product"));
+            foreach (var item in nodes)
+            {
+                // displaying final output
+                Console.WriteLine(item.InnerHtml);
+
+            }
+
+            //nodes = doc.DocumentNode.Descendants("span").Where(n => n.HasClass("hidden-phone hidden-mobile des showPhone tooltip"));
+            //foreach (var item in nodes)
+            //{
+            //    // displaying final output
+            //    Console.WriteLine(item.InnerHtml);
+
+            //}
+
+            nodes = doc.DocumentNode.Descendants("span").Where(n => n.HasClass("phoneEvent"));
+            foreach (var item in nodes)
+            {
+                // displaying final output
+                Console.WriteLine(item.InnerHtml);
+
+            } 
         }
     }
 }
