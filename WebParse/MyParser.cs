@@ -351,6 +351,27 @@ namespace WebParse
             }
 
         }
+        
+        public void ExtractAllImages(String url)
+	{
+		
+		// declare html document
+		var document = new HtmlWeb().Load(url);
+		
+		// now using LINQ to grab/list all images from website
+		var ImageURLs = document.DocumentNode.Descendants("img")
+										.Select(e => e.GetAttributeValue("src", null))
+										.Where(s => !String.IsNullOrEmpty(s));
+		
+		// now showing all images from web page one by one
+		foreach(var item in ImageURLs)
+		{
+			if (item != null)
+			{
+				Console.WriteLine(item);
+			}
+		}
+	}
 
         public void ExtractDataFromBds(String url)
         {
