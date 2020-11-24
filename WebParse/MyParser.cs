@@ -222,31 +222,69 @@ namespace WebParse
             Console.WriteLine("Chg :" + chg.InnerText);
             Console.WriteLine("Pct :" + pct.InnerText);
         }
+	
+	public void ExtractIndexFromInvesting(String url,String id)
+        {
+            HtmlWeb web = new HtmlWeb();
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc = web.Load(url);
+            // extracting all links
+            //SelectSingleNode("//*[@id='test']")
+            var index = doc.DocumentNode.SelectSingleNode("//*[@id='sb_last_"+id+"']");
+            var chg = doc.DocumentNode.SelectSingleNode("//*[@id='sb_change_"+id+"']");
+            var pct = doc.DocumentNode.SelectSingleNode("//*[@id='sb_changepc_"+id+"']");
+            //var pct = doc.DocumentNode.SelectSingleNode("//*[@id='" + "lgq-chg-percent" + "']");
+            //lgq - chg - percent
+            Console.WriteLine("index :" + index.InnerText);
+            //Console.WriteLine("Ask :" + ask.InnerText);
+            Console.WriteLine("Chg :" + chg.InnerText);
+            Console.WriteLine("Pct :" + pct.InnerText);
+        }
+
 
 
         public void ExtractIndexFromInvesting(String url)
         {
-            var URL = "https://www.investing.com";
-            HtmlWeb web = new HtmlWeb();
-            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-            doc = web.Load(URL);
+//             var URL = "https://www.investing.com";
+//             HtmlWeb web = new HtmlWeb();
+//             HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+//             doc = web.Load(URL);
 
-            var list = new Dictionary<string, string>()
+//             var list = new Dictionary<string, string>()
+//             {
+//                 {"sb_last_8873", "US30 Futures"},
+//                 {"sb_last_8839", "US 500 Futures"},
+//                 {"sb_last_169","Dow Jones"},
+//                 {"sb_last_166", "S&P 500"},
+//                 {"sb_last_14958", "Nasdaq"},
+//                 {"sb_last_44336", "S&P 500 VIX"},
+//                 {"sb_last_8827", "Dollar Index"}
+//             };
+
+//             foreach (var x in list)
+//             {
+//                 var name = doc.DocumentNode.SelectSingleNode("//*[@id='" + x.Key + "']");
+//                 Console.WriteLine(x.Value + ": " + name.InnerText);
+//             }
+
+	//Thai add to test
+	    var list = new Dictionary<string, string>()
             {
-                {"sb_last_8873", "US30 Futures"},
-                {"sb_last_8839", "US 500 Futures"},
-                {"sb_last_169","Dow Jones"},
-                {"sb_last_166", "S&P 500"},
-                {"sb_last_14958", "Nasdaq"},
-                {"sb_last_44336", "S&P 500 VIX"},
-                {"sb_last_8827", "Dollar Index"}
+                {"8873", "US30 Futures"},
+                {"8839", "US 500 Futures"},
+                {"169","Dow Jones"},
+                {"166", "S&P 500"},
+                {"14958", "Nasdaq"},
+                {"44336", "S&P 500 VIX"},
+                {"8827", "Dollar Index"}
             };
 
             foreach (var x in list)
             {
                 var name = doc.DocumentNode.SelectSingleNode("//*[@id='" + x.Key + "']");
-                Console.WriteLine(x.Value + ": " + name.InnerText);
+                ExtractIndexFromInvesting("https://www.investing.com",x.Key);
             }
+
         }
 
         public void ExtractHrefNew(string URL)
