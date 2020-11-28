@@ -1,3 +1,5 @@
+#Run on https://colab.research.google.com
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -13,3 +15,32 @@ print('Bid :'+results.text)
 results= soup.find( id="lgq-ask")
 # results=soup.find('title')
 print('Ask :'+results.text)
+
+
+# Parse all job from 1 page in itviec
+
+import requests
+from bs4 import BeautifulSoup
+
+URL = 'https://itviec.com/it-jobs/ho-chi-minh-hcm'
+page = requests.get(URL)
+
+soup = BeautifulSoup(page.content, 'html.parser')
+# results = soup.find(class='job_content')
+job_elems = soup.find_all( class_='job_content')
+
+for job_elem in job_elems:
+    # Each job_elem is a new BeautifulSoup object.
+    # You can use the same methods on it as you did before.
+    title_elem = job_elem.find('h2', class_='title')
+    salary_elem = job_elem.find('div', class_='salary')
+    location_elem = job_elem.find('div', class_='address')
+    print(title_elem.text.strip())
+    print(salary_elem.text.strip())
+    print(location_elem.text.strip())
+    company_elem = job_elem.find_all('img')
+    for a in company_elem:
+      print(a['alt'])
+    print()
+    
+   
