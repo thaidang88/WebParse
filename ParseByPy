@@ -106,3 +106,23 @@ page_soup = soup(webpage, "html.parser")
 vnindex= page_soup.find_all(class_='priceText__1853e8a5')
 print(vnindex)
 
+#Get Weather
+from urllib.request import Request, urlopen
+from bs4 import BeautifulSoup as soup
+url = 'https://www.accuweather.com/vi/vn/ho-chi-minh-city/353981/hourly-weather-forecast/353981'
+req = Request(url , headers={'User-Agent': 'Mozilla/5.0'})
+
+webpage = urlopen(req).read()
+page_soup = soup(webpage, "html.parser")
+title = page_soup.find("title")
+print(title)
+containers = page_soup.findAll('div',class_='accordion-item-header-container')
+for container in containers:
+    date=container.find('h2',class_='date')
+    temperature=container.find('div',class_='temp metric')
+    real_feel=container.find('span',class_='real-feel')
+    phase=container.find('span',class_='phrase')
+    print(date.text.strip())
+    print(temperature.text.strip())
+    print(real_feel)
+    print(phase)
