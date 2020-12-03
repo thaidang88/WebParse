@@ -174,3 +174,27 @@ print(title)
 meaning = page_soup.find_all('span',class_='trans dtrans dtrans-se')
 for mean in meaning:
   print(mean.text.strip())
+
+#Get images and href
+from urllib.request import Request, urlopen
+from bs4 import BeautifulSoup as soup
+url = 'https://dantri.com.vn'
+req = Request(url , headers={'User-Agent': 'Mozilla/5.0'})
+
+webpage = urlopen(req).read()
+page_soup = soup(webpage, "html.parser")
+title = page_soup.find("title")
+print(title)
+for a in page_soup.find_all('a', href=True):
+    print(a.get('title'))
+    print(a.get('href'))
+    images=a.find_all('img')
+    for image in images:
+      print(image['src'])
+      # print(image['alt'])
+# images = page_soup.find_all('img')
+# for image in images:
+#     #print image source
+#     print(image['src'])
+#     #print alternate text
+#     print(image['alt'])
